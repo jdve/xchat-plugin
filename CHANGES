@@ -1,0 +1,34 @@
+CHANGES
+0.0.2 -> 0.0.3
+ - Network.IRC.XChat.Example moved to
+   Network.IRC.XChat.Examples.AutoOp
+ - New example added : a simple counter
+ - Plugin memory doesn't require to be Storable anymore
+ - Less internal malloc/free
+ - The memory type MUST now be defined in the programmer's module
+ - Le type version a été enlevé
+0.0.1 -> 0.0.2
+ - imports have been cleaned
+ - corrected bug with the StripRules type
+   (no-attribute and no-color had to be swapped)
+ - now every allocated memory should be freed
+   (it wasn't the case yet, as the previous version
+    was the first one, and I just wanted some working
+    stuff)
+ - added some strictness annotations, but I guess many
+   more should be added although it shouldn't make
+   a real difference (it is just a binding after all)
+0.0.1
+ - first release
+ - not available on Hackage (and won't be)
+====================
+Plans for later versions
+
+- more examples
+- consider removing the "XChatPlugin a" argument of all functions,
+  since at first glance, one and only one plugin handle is defined
+  in each plugin
+- replace event strings with an event type, for type safety and
+  to avoid mistyping an event string. Furthermore, it improves
+  the documentation to be able to get an exhaustive list of possible
+  command; with strings we are never sure there is a forgotten one.

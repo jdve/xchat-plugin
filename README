@@ -1,0 +1,33 @@
+This package adds bindings to the plugins system of XChat to Haskell.
+
+Only 2.8.8 version of XChat is supported.
+It builds some programe called hsxchat you can use to build
+your plugins.
+
+It is developped on a GNU/LINUX system,
+ so don't expect it to work under Windows
+ (although it should be quite easy to port).
+
+It is yet experimental, only the example given in
+ the examples (AutoOp and CountDown) are known to work.
+
+I think all other features should also work,
+ but there may be memory leaks, or performance issues.
+
+If you have patches to repair some bug or improve the design
+ as well as some test files, I will be glad to have them
+ (se?drikov@gm?ail.com without the question marks),
+ but please don't send feature request or complains,
+ since the code is not yet mature.
+
+Welcomed tests files are:
+ plugins which should compile but don't
+ plugins which leaks memory but shouldn't
+ plugins which results in a segfault
+ plugins which behave correctly (for regression tests)
+
+If your test is split in many files,
+ please send a single archive file (for example a *.tgz)
+
+Yet I didn't even spent time to add strictness annotations
+ or to hunt memory leaks due to my lack of relevant examples.
