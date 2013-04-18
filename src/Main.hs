@@ -16,12 +16,12 @@ module Main (main
 ) where
 
 import System.Cmd            (system)
+import System.Info           (os)
 import System.IO.Error       (catchIOError)
 import System.Directory      (createDirectory, removeDirectory,
                               copyFile, removeFile,
                               getCurrentDirectory, setCurrentDirectory)
 import System.FilePath       (pathSeparator)
-import System.Posix.Files    (createSymbolicLink, removeLink)
 import System.Console.GetOpt (OptDescr(..), ArgDescr(..), ArgOrder(..),
                               getOpt, usageInfo)
 import System.Environment    (getArgs, getProgName)
@@ -208,7 +208,7 @@ createWorkspace o =
       newdir = cd++(pathSeparator:pn)
       catchErrA _ = "Sorry, unable to create the " ++ newdir ++ " directory."
       csym s = do old <- getDataFileName s
-                  createSymbolicLink old (newdir ++ (pathSeparator : s))
+                  copyFile old (newdir ++ (pathSeparator : s))
   in
   catchIOError
    (createDirectory newdir >> csym "module_init.c" >> csym "xchat-plugin.h" >>
@@ -217,14 +217,19 @@ createWorkspace o =
               (printHaskellCode o) >> return Nothing)
    (return . Just . catchErrA)
 
+libraryExt :: String
+libraryExt = case os of
+  "linux" -> "so"
+  "win" -> "dll"
+
 commandLine :: Options -> String
 commandLine o =
   let plug = getOption o pluginName defPluginName
   in
-  "ghc -O2 --make -no-hs-main -optl '-shared' " ++
-  "-fPIC -optc '-DMODULE=M" ++ plug ++ "' -optc '-Wl,--export-dynamic' " ++
-  "-optc '-g' " ++
-  "-o " ++ plug ++ ".so " ++ plug ++ ".hs module_init.c xchat-plugin-hack.c"
+  "ghc -O2 --make -no-hs-main -optl \"-shared\" " ++
+  "-fPIC -optc \"-DMODULE=M" ++ plug ++ "\" -optc \"-Wl,--export-dynamic\" " ++
+  "-optc \"-g\" " ++
+  "-o " ++ plug ++ "." ++ libraryExt ++ " " ++ plug ++ ".hs module_init.c xchat-plugin-hack.c"
 
 compilePlugin :: Options -> IO (Maybe String)
 compilePlugin o =
@@ -255,10 +260,10 @@ cleanWorkspace o =
       newdir = cd++(pathSeparator:pn)
       dir = newdir ++ (pathSeparator:"")
   in
-  catchIOError (removeLink (dir++"module_init.c") >>
-                removeLink (dir++"xchat-plugin-hack.h") >>
-                removeLink (dir++"xchat-plugin-hack.c") >>
-                removeLink (dir++"xchat-plugin.h") >>
+  catchIOError (removeFile (dir++"module_init.c") >>
+                removeFile (dir++"xchat-plugin-hack.h") >>
+                removeFile (dir++"xchat-plugin-hack.c") >>
+                removeFile (dir++"xchat-plugin.h") >>
                 removeFile (dir++pn++".hi") >>
                 removeFile (dir++pn++".hs") >>
                 removeFile (dir++pn++".o") >>

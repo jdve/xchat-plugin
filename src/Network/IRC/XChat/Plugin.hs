@@ -94,7 +94,6 @@ import Foreign            (peek, poke, shiftL, shiftR, (.|.), (.&.), testBit,
                            advancePtr, malloc, free, nullPtr, mallocArray)
 import Foreign.C.Types    (CInt (..), CChar (..), CTime (..))
 import Foreign.C.String   (CString (..), newCString, peekCString)
-import System.Posix.Types (Fd (..))
 import Control.Monad      (unless)
 import Data.Foldable      (foldlM)
 import Data.IORef         (IORef (..), readIORef, writeIORef, newIORef)
@@ -566,10 +565,10 @@ to an action described by the flags.
 The callback function expects a file descriptor and a flag (that may be
 removed in a newer version).
 -}
-xChatHookFd :: Fd -> Flags -> Hook a b c (Fd, Flags)
-xChatHookFd (Fd fd) f (XCP (pa, ph)) cb init =
-  wrap4 (\ fd f _ -> retHook pa (cb (Fd fd, flagOfCInt f))) >>= \ cb ->
-  hook (xChatHookFdFFI ph fd (cIntOfFlag f) cb) pa init
+xChatHookFd :: CInt -> Flags -> Hook a b c (CInt, Flags)
+xChatHookFd (CInt fd) f (XCP (pa, ph)) cb init =
+  wrap4 (\ fd f _ -> retHook pa (cb (fd, flagOfCInt f))) >>= \ cb ->
+  hook (xChatHookFdFFI ph (CInt fd) (cIntOfFlag f) cb) pa init
 
 foreign import ccall "xchat-plugin-hack.h xchat_unhook"
  xChatUnhookFFI

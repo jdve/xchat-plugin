@@ -1,6 +1,7 @@
 #ifndef XCHAT_PLUGIN_HACK_H
 #define XCHAT_PLUGIN_HACK_H
 
+#undef WIN32
 #include "xchat-plugin.h"
 
 /* The xchat_emit_print function is a vararg.
