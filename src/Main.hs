@@ -183,6 +183,9 @@ printInitHaskellCode o =
   "     return 1\n"++
   "foreign export ccall \"xchat_plugin_init\" xChatPluginInitM\n"++
   "  :: Ptr (XchatPlugin "++ty++") ->\n"++
+  "     Ptr CString -> Ptr CString -> Ptr CString -> CString -> IO CInt\n"++
+  "foreign export ccall \"hexchat_plugin_init\" xChatPluginInitM\n"++
+  "  :: Ptr (XchatPlugin "++ty++") ->\n"++
   "     Ptr CString -> Ptr CString -> Ptr CString -> CString -> IO CInt\n"
 
 printDeinitHaskellCode :: Options -> String
@@ -193,6 +196,8 @@ printDeinitHaskellCode o =
      Nothing -> "  return 1\n"
      Just s -> "  "++s++" >> return 1\n")++
   "foreign export ccall \"xchat_plugin_deinit\" xChatPluginDeinitM\n"++
+  "  :: IO CInt\n"++
+  "foreign export ccall \"hexchat_plugin_deinit\" xChatPluginDeinitM\n"++
   "  :: IO CInt\n"
 
 printHaskellCode :: Options -> String
