@@ -224,14 +224,14 @@ createWorkspace o =
 
 libraryExt :: String
 libraryExt = case os of
-  "linux" -> "so"
-  "win" -> "dll"
+  "mingw32" -> "dll"
+  otherwise -> "so"
 
 commandLine :: Options -> String
 commandLine o =
   let plug = getOption o pluginName defPluginName
   in
-  "ghc -O2 --make -no-hs-main -optl \"-shared\" " ++
+  "ghc -O2 --make -no-hs-main -threaded -optl \"-shared\" " ++
   "-fPIC -optc \"-DMODULE=M" ++ plug ++ "\" -optc \"-Wl,--export-dynamic\" " ++
   "-optc \"-g\" " ++
   "-o " ++ plug ++ "." ++ libraryExt ++ " " ++ plug ++ ".hs module_init.c xchat-plugin-hack.c"
